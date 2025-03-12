@@ -22,7 +22,7 @@ on:
 
 jobs:
   terraform:
-    runs-on: ubuntu-latest
+    runs-on: debian-latest
 
     env:
       TF_VAR_environment: ${{ github.event.inputs.environment || (github.ref_name == 'QA' || 'DEV') }}
