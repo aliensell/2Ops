@@ -1,62 +1,38 @@
-name: Terraform Azure Deployment
-
+name: Terraform Deployment to Azure
 on:
-  #push:
-  #  branches:
-  #    - DEV
-  #    - QA
-  #pull_request:
-  #  branches:
-  #    - DEV
-  #    - QA
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Select the environment to deploy'
+        description: 'Select the environment to deploy (DEV/QA)'
         required: true
         default: 'DEV'
         type: choice
         options:
           - DEV
           - QA
-
 jobs:
   terraform:
     runs-on: debian-latest
-
-    env:
-      TF_VAR_environment: ${{ github.event.inputs.environment || (github.ref_name == 'QA' || 'DEV') }}
-
     steps:
-      # Checkout the code
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      # Set up Azure CLI
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
       - name: Azure Login
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # Set up Terraform
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.5.7
-
-      # Terraform Init with Backend Configuration
       - name: Terraform Init
-        run: terraform init -backend-config="backend-${{ env.TF_VAR_environment }}.tfvars"
+        run: terraform init
 
-      # Terraform Validate
-      - name: Terraform Validate
-        run: terraform validate
-
-      # Terraform Plan
       - name: Terraform Plan
-        run: terraform plan -var-file="env-${{ env.TF_VAR_environment }}.tfvars" -out=tfplan
+        run: terraform plan -var="environment=${{ github.event.inputs.environment }}"
 
-      # Terraform Apply (only on push or manual trigger)
       - name: Terraform Apply
-        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
-        run: terraform apply -auto-approve tfplan
+        if: ${{ github.event.inputs.environment == 'DEV' || github.event.inputs.environment == 'QA' }}
+        run: terraform apply -auto-approve -var="environment=${{ github.event.inputs.environment }}"
