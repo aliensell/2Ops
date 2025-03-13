@@ -53,7 +53,7 @@ resource "azurerm_subnet" "subnet" {
 
 resource "azurerm_storage_account" "dev_storage" {
   count                    = var.environment == "DEV" ? 1 : 0
-  name                     = "examplestorage${var.environment}"
+  name                     = "mystorage-${var.environment}"
   resource_group_name      = azurerm_resource_group.dev_rg[0].name
   location                 = "East US"
   account_tier             = "Standard"
@@ -66,7 +66,7 @@ resource "azurerm_storage_account" "dev_storage" {
 
 resource "azurerm_key_vault" "qa_keyvault" {
   count              = var.environment == "QA" ? 1 : 0
-  name               = "examplekeyvault${var.environment}"
+  name               = "mykeyvault-${var.environment}"
   resource_group_name = azurerm_resource_group.qa_rg[0].name
   location            = "East US"
   sku_name            = "standard"
