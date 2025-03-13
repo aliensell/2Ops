@@ -12,6 +12,9 @@ on:
           - DEV
           - QA
 
+permissions:
+  id-token: write  # Grant write permissions to the ID token, necessary for Azure login
+
 jobs:
   terraform-clean:
     runs-on: ubuntu-latest
