@@ -33,6 +33,7 @@ jobs:
           client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          auth-type: service_principal  # Explicitly specify the auth-type
 
       - name: Terraform Init
         run: terraform init
