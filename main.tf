@@ -1,5 +1,3 @@
-# Terraform Configuration for Azure Deployment
-
 terraform {
   required_version = ">= 1.5.0"
   backend "azurerm" {
@@ -37,9 +35,9 @@ resource "azurerm_resource_group" "qa_rg" {
   location = "East US"
 }
 
-resource "azurerm_virtual_network" "vnet" {
+resource "azurerm_virtual_network" "dev_vnet" {
   count               = var.environment == "DEV" ? 1 : 0
-  name                = "example-vnet-${var.environment}"
+  name                = "vnet-${var.environment}"
   resource_group_name = azurerm_resource_group.dev_rg[0].name
   location            = "East US"
   address_space       = ["10.0.0.0/16"]
@@ -47,9 +45,9 @@ resource "azurerm_virtual_network" "vnet" {
 
 resource "azurerm_subnet" "subnet" {
   count                = var.environment == "DEV" ? 1 : 0
-  name                 = "example-subnet"
+  name                 = "subnet-${var.environment}"
   resource_group_name  = azurerm_resource_group.dev_rg[0].name
-  virtual_network_name = azurerm_virtual_network.vnet[0].name
+  virtual_network_name = azurerm_virtual_network.dev_vnet[0].name
   address_prefixes     = ["10.0.1.0/24"]
 }
 
