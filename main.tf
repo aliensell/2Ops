@@ -1,5 +1,15 @@
+provider "azurerm" {
+  features {}
+}
+
+resource "azurerm_resource_group" "terraform_backend_rg" {
+  name     = "terraform-backend-rg"
+  location = "West Europe"
+}
+
 module "backend" {
-  source = "./modules/backend"
+  source              = "./modules/backend"
+  resource_group_name = azurerm_resource_group.terraform_backend_rg.name
 }
 
 terraform {
@@ -16,10 +26,6 @@ terraform {
       version = "=4.1.0"
     }
   }
-}
-
-provider "azurerm" {
-  features {}
 }
 
 variable "environment" {
