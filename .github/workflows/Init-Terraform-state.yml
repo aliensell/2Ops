@@ -1,0 +1,33 @@
+name: Terraform Init, Plan, and Apply
+
+on:
+  workflow_dispatch:  # Trigger manually from GitHub UI
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          auth-type: service_principal
+
+      - name: Initialize Terraform (run only init_terraform_state.tf)
+        run: terraform init -backend=false -reconfigure -input=false init_terraform_state.tf
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan -input=false -no-color
+
+      - name: Terraform Apply
+        run: terraform apply -input=false -no-color tfplan
