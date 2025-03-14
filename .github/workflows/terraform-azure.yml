@@ -34,7 +34,7 @@ jobs:
           auth-type: service_principal
 
       - name: Create storage for Terraform state in Azure
-        run: chmod +x ./create_azure_resources.sh && ./create_azure_resources.sh
+        run: chmod +x ./Create_storage_for_terraform_state.sh && ./Create_storage_for_terraform_state.sh
       
       - name: Terraform Init
         run: terraform init
