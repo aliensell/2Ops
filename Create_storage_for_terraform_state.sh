@@ -8,7 +8,7 @@ CONTAINER_NAME=tfstate
 az group show --name $RESOURCE_GROUP_NAME &> /dev/null
 if [ $? -ne 0 ]; then
     echo "Resource group does not exist. Creating resource group..."
-    az group create --name $RESOURCE_GROUP_NAME --location eastus
+    az group create --name $RESOURCE_GROUP_NAME --location westeurope
 else
     echo "Resource group $RESOURCE_GROUP_NAME already exists."
 fi
@@ -18,7 +18,7 @@ STORAGE_ACCOUNT_EXIST=$(az storage account check-name --name $STORAGE_ACCOUNT_NA
 
 if [ "$STORAGE_ACCOUNT_EXIST" == "true" ]; then
     echo "Storage account name $STORAGE_ACCOUNT_NAME is available. Creating storage account..."
-    az storage account create --resource-group $RESOURCE_GROUP_NAME --name $STORAGE_ACCOUNT_NAME --sku Standard_LRS --encryption-services blob
+    az storage account create --resource-group $RESOURCE_GROUP_NAME --name $STORAGE_ACCOUNT_NAME --location westeurope --sku Standard_LRS --encryption-services blob
 else
     echo "Storage account $STORAGE_ACCOUNT_NAME already exists. Skipping creation."
 fi
