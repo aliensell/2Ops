@@ -1,11 +1,11 @@
 terraform {
   required_version = ">= 1.5.0"
-  backend "azurerm" {
-    resource_group_name  = "terraform-backend-rg"
-    storage_account_name = "tfbackendstorage"
-    container_name       = "tfstate"
-    key                  = "terraform.tfstate"
-  }
+  #backend "azurerm" {
+  #  resource_group_name  = "terraform-backend-rg"
+  #  storage_account_name = "tfbackendstorage"
+  #  container_name       = "tfstate"
+  #  key                  = "terraform.tfstate"
+  #}
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -40,6 +40,15 @@ resource "azurerm_storage_container" "backend_container" {
   name                  = "tfstate"
   storage_account_name  = azurerm_storage_account.backend_sa.name
   container_access_type = "private"
+}
+
+terraform {
+  backend "azurerm" {
+    resource_group_name  = azurerm_resource_group.backend_rg.name
+    storage_account_name = azurerm_storage_account.backend_sa.name
+    container_name       = azurerm_storage_container.backend_container.name
+    key                  = "terraform.tfstate"
+  }
 }
 
 resource "azurerm_resource_group" "dev_rg" {
