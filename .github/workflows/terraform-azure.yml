@@ -12,7 +12,7 @@ on:
           - QA
 
 permissions:
-  id-token: write  # Grant write permissions to the ID token, necessary for Azure login
+  id-token: write  # necessary for Azure login
 
 jobs:
   terraform:
@@ -23,8 +23,6 @@ jobs:
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
-        #with:
-        #  terraform_version: 1.5.0
 
       - name: Azure Login
         uses: azure/login@v2
@@ -32,9 +30,8 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          #subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           auth-type: service_principal
-          #enable-AzPSSession: true
 
       - name: Terraform Init
         run: terraform init
