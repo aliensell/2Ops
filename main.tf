@@ -2,7 +2,7 @@ terraform {
   required_version = ">= 1.5.0"
   backend "azurerm" {
     resource_group_name  = "terraform-backend-rg"
-    storage_account_name = "terraformbackendstorage"
+    storage_account_name = "backendstorageterraform"
     container_name       = "tfstate"
     key                  = "terraform.tfstate"
   }
