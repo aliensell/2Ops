@@ -1,36 +1,73 @@
+terraform {
+  required_version = ">= 1.5.0"
+  backend "azurerm" {
+    resource_group_name  = "terraform-backend-rg"
+    storage_account_name = "tfbackendstorage"
+    container_name       = "tfstate"
+    key                  = "terraform.tfstate"
+  }
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "=4.1.0"
+    }
+  }
+}
+
 provider "azurerm" {
   features {}
 }
 
-# Create the Resource Group
-resource "azurerm_resource_group" "backend" {
-  name     = "terraform-backend-rg"
-  location = "East US"  # Set your desired Azure region
+variable "environment" {
+  description = "The environment to deploy (DEV/QA)"
+  type        = string
 }
 
-# Create the Storage Account for Backend
-resource "azurerm_storage_account" "backend" {
-  name                     = "tfbackendstorage"
-  resource_group_name       = azurerm_resource_group.backend.name
-  location                 = azurerm_resource_group.backend.location
-  account_tier               = "Standard"
+resource "azurerm_resource_group" "dev_rg" {
+  count    = var.environment == "DEV" ? 1 : 0
+  name     = "example-dev-rg"
+  location = "West Europe"
+}
+
+resource "azurerm_resource_group" "qa_rg" {
+  count    = var.environment == "QA" ? 1 : 0
+  name     = "example-qa-rg"
+  location = "West Europe"
+}
+
+resource "azurerm_virtual_network" "dev_vnet" {
+  count               = var.environment == "DEV" ? 1 : 0
+  name                = "vnet-${var.environment}"
+  resource_group_name = azurerm_resource_group.dev_rg[0].name
+  location            = "West Europe"
+  address_space       = ["10.0.0.0/16"]
+}
+
+resource "azurerm_subnet" "subnet" {
+  count                = var.environment == "DEV" ? 1 : 0
+  name                 = "subnet-${var.environment}"
+  resource_group_name  = azurerm_resource_group.dev_rg[0].name
+  virtual_network_name = azurerm_virtual_network.dev_vnet[0].name
+  address_prefixes     = ["10.0.1.0/24"]
+}
+
+resource "azurerm_storage_account" "dev_storage" {
+  count                    = var.environment == "DEV" ? 1 : 0
+  name                     = "mystorage-${var.environment}"
+  resource_group_name      = azurerm_resource_group.dev_rg[0].name
+  location                 = "West Europe"
+  account_tier             = "Standard"
   account_replication_type = "LRS"
-}
-
-# Create the Blob Container for storing Terraform state
-resource "azurerm_storage_container" "tfstate" {
-  name                  = "tfstate"
-  storage_account_name  = azurerm_storage_account.backend.name
-  container_access_type = "private"
-}
-
-# This null_resource triggers the backend initialization after the resources are created
-resource "null_resource" "init_backend" {
-  depends_on = [
-    azurerm_storage_container.tfstate
-  ]
-
-  provisioner "local-exec" {
-    command = "terraform init -backend-config='resource_group_name=${azurerm_resource_group.backend.name}' -backend-config='storage_account_name=${azurerm_storage_account.backend.name}' -backend-config='container_name=tfstate' -backend-config='key=terraform.tfstate'"
+  network_rules {
+    default_action             = "Deny"
+    virtual_network_subnet_ids = [azurerm_subnet.subnet[0].id]
   }
+}
+
+resource "azurerm_key_vault" "qa_keyvault" {
+  count              = var.environment == "QA" ? 1 : 0
+  name               = "mykeyvault-${var.environment}"
+  resource_group_name = azurerm_resource_group.qa_rg[0].name
+  location            = "West Europe"
+  sku_name            = "standard"
 }
