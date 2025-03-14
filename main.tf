@@ -16,15 +16,30 @@ terraform {
 
 provider "azurerm" {
   features {}
-  #client_id       = var.AZURE_CLIENT_ID
-  #client_secret   = var.AZURE_CLIENT_SECRET
-  #tenant_id       = var.AZURE_TENANT_ID
-  #subscription_id = var.AZURE_SUBSCRIPTION_ID
 }
 
 variable "environment" {
   description = "The environment to deploy (DEV/QA)"
   type        = string
+}
+
+resource "azurerm_resource_group" "backend_rg" {
+  name     = "terraform-backend-rg"
+  location = "East Europe"
+}
+
+resource "azurerm_storage_account" "backend_sa" {
+  name                     = "tfbackendstorage"
+  resource_group_name      = azurerm_resource_group.backend_rg.name
+  location = "East Europe"
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+}
+
+resource "azurerm_storage_container" "backend_container" {
+  name                  = "tfstate"
+  storage_account_name  = azurerm_storage_account.backend_sa.name
+  container_access_type = "private"
 }
 
 resource "azurerm_resource_group" "dev_rg" {
