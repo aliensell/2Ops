@@ -45,20 +45,20 @@ resource "azurerm_storage_container" "backend_container" {
 resource "azurerm_resource_group" "dev_rg" {
   count    = var.environment == "DEV" ? 1 : 0
   name     = "example-dev-rg"
-  location = "East US"
+  location = "East Europe"
 }
 
 resource "azurerm_resource_group" "qa_rg" {
   count    = var.environment == "QA" ? 1 : 0
   name     = "example-qa-rg"
-  location = "East US"
+  location = "East Europe"
 }
 
 resource "azurerm_virtual_network" "dev_vnet" {
   count               = var.environment == "DEV" ? 1 : 0
   name                = "vnet-${var.environment}"
   resource_group_name = azurerm_resource_group.dev_rg[0].name
-  location            = "East US"
+  location            = "East Europe"
   address_space       = ["10.0.0.0/16"]
 }
 
@@ -74,7 +74,7 @@ resource "azurerm_storage_account" "dev_storage" {
   count                    = var.environment == "DEV" ? 1 : 0
   name                     = "mystorage-${var.environment}"
   resource_group_name      = azurerm_resource_group.dev_rg[0].name
-  location                 = "East US"
+  location                 = "East Europe"
   account_tier             = "Standard"
   account_replication_type = "LRS"
   network_rules {
@@ -87,6 +87,6 @@ resource "azurerm_key_vault" "qa_keyvault" {
   count              = var.environment == "QA" ? 1 : 0
   name               = "mykeyvault-${var.environment}"
   resource_group_name = azurerm_resource_group.qa_rg[0].name
-  location            = "East US"
+  location            = "East Europe"
   sku_name            = "standard"
 }
