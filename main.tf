@@ -1,3 +1,7 @@
+module "backend" {
+  source = "./modules/backend"
+}
+
 terraform {
   required_version = ">= 1.5.0"
   backend "azurerm" {
