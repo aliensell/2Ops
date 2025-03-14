@@ -1,22 +1,3 @@
-terraform {
-  required_version = ">= 1.5.0"
-  
-  # Backend configuration (use the storage account and resource group created by Terraform)
-  backend "azurerm" {
-    resource_group_name  = azurerm_resource_group.backend.name
-    storage_account_name = azurerm_storage_account.backend.name
-    container_name       = "tfstate"
-    key                  = "terraform.tfstate"
-  }
-
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "=4.1.0"
-    }
-  }
-}
-
 provider "azurerm" {
   features {}
 }
@@ -41,4 +22,15 @@ resource "azurerm_storage_container" "tfstate" {
   name                  = "tfstate"
   storage_account_name  = azurerm_storage_account.backend.name
   container_access_type = "private"
+}
+
+# This null_resource triggers the backend initialization after the resources are created
+resource "null_resource" "init_backend" {
+  depends_on = [
+    azurerm_storage_container.tfstate
+  ]
+
+  provisioner "local-exec" {
+    command = "terraform init -backend-config='resource_group_name=${azurerm_resource_group.backend.name}' -backend-config='storage_account_name=${azurerm_storage_account.backend.name}' -backend-config='container_name=tfstate' -backend-config='key=terraform.tfstate'"
+  }
 }
