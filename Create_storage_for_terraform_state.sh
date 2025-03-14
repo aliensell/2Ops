@@ -1,7 +1,7 @@
 #!/bin/bash
 
 RESOURCE_GROUP_NAME=terraform-backend-rg
-STORAGE_ACCOUNT_NAME=tfbackendstorage
+STORAGE_ACCOUNT_NAME=backendstorageterraform
 CONTAINER_NAME=tfstate
 
 # Check if resource group exists (if yes skip, if no create)
