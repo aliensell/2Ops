@@ -25,13 +25,13 @@ variable "environment" {
 
 resource "azurerm_resource_group" "dev_rg" {
   count    = var.environment == "DEV" ? 1 : 0
-  name     = "example-dev-rg"
+  name     = "dev-rg"
   location = "West Europe"
 }
 
 resource "azurerm_resource_group" "qa_rg" {
   count    = var.environment == "QA" ? 1 : 0
-  name     = "example-qa-rg"
+  name     = "qa-rg"
   location = "West Europe"
 }
 
