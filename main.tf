@@ -64,10 +64,14 @@ resource "azurerm_storage_account" "dev_storage" {
   }
 }
 
+data "azurerm_client_config" "current" {}
+
 resource "azurerm_key_vault" "qa_keyvault" {
   count              = var.environment == "QA" ? 1 : 0
   name               = "mykeyvault-${var.environment}"
   resource_group_name = azurerm_resource_group.qa_rg[0].name
   location            = "West Europe"
+  #tenant_id          = "bbaf146a-d527-4a60-931a-85358eb8160d"
+  tenant_id           = data.azurerm_client_config.current.tenant_id
   sku_name            = "standard"
 }
