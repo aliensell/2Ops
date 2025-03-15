@@ -37,8 +37,8 @@ jobs:
       - name: Terraform Init
         run: terraform init
         
-      #- name: unlock
-      #  run: terraform force-unlock -force "fc798909-97da-bc54-128a-69a4e2f311c9"
+      - name: unlock
+        run: terraform force-unlock -force "a94dd210-89f6-294d-8c9e-48cd7e24c97e"
       
       - name: Terraform Destroy
         env:
