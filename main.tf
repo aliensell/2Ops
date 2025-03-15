@@ -33,7 +33,6 @@ variable "mysubscriptionid" {
 
 provider "azurerm" {
   #subscription_id = data.azurerm_client_config.current.subscription_id
-  #subscription_id = "932a9678-b893-4bb7-8826-83e88ae22272"
   subscription_id = "${var.mysubscriptionid}"
   features {}
 }
@@ -68,8 +67,7 @@ resource "azurerm_subnet" "subnet" {
 
 resource "azurerm_storage_account" "dev_storage" {
   count                    = var.environment == "DEV" ? 1 : 0
-  #name                     = "mystorage-${var.environment}"
-  name                     = "mystorage-lower(var.environment)"
+  name                     = "mystorage-DEV"
   resource_group_name      = azurerm_resource_group.dev_rg[0].name
   location                 = "West Europe"
   account_tier             = "Standard"
