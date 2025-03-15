@@ -17,7 +17,7 @@ terraform {
 data "azurerm_client_config" "current" {}
 
 provider "azurerm" {
-  data.azurerm_client_config.current.subscription_id
+  subscription_id = data.azurerm_client_config.current.subscription_id
   features {}
 }
 
