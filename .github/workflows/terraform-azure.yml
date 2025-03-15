@@ -39,8 +39,8 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      #- name: unlock
-      #  run: terraform force-unlock -force "462dde2f-4d4e-ffe6-5313-c7b35bd3350d"
+      - name: unlock
+        run: terraform force-unlock -force "01b21cc4-e4af-acea-1ce1-bc1969669076"
       
       - name: Terraform Plan
         env:
