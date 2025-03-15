@@ -67,7 +67,7 @@ resource "azurerm_subnet" "subnet" {
 
 resource "azurerm_storage_account" "dev_storage" {
   count                    = var.environment == "DEV" ? 1 : 0
-  name                     = "mystorage-DEV"
+  name                     = "mystorage-dev"
   resource_group_name      = azurerm_resource_group.dev_rg[0].name
   location                 = "West Europe"
   account_tier             = "Standard"
