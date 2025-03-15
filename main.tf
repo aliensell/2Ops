@@ -14,7 +14,10 @@ terraform {
   }
 }
 
+data "azurerm_client_config" "current" {}
+
 provider "azurerm" {
+  data.azurerm_client_config.current.subscription_id
   features {}
 }
 
@@ -63,8 +66,6 @@ resource "azurerm_storage_account" "dev_storage" {
     virtual_network_subnet_ids = [azurerm_subnet.subnet[0].id]
   }
 }
-
-data "azurerm_client_config" "current" {}
 
 resource "azurerm_key_vault" "qa_keyvault" {
   count              = var.environment == "QA" ? 1 : 0
