@@ -40,11 +40,8 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
-        env: 
-          TF_VAR_mysubscriptionid: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          TF_VAR_mytenantid: ${{ secrets.AZURE_TENANT_ID }}
         run: terraform plan -var="environment=${{ github.event.inputs.environment }}"
 
       - name: Terraform Apply
         if: ${{ github.event.inputs.environment == 'DEV' || github.event.inputs.environment == 'QA' }}
-        run: terraform apply -auto-approve -var="environment=${{ github.event.inputs.environment }}" -var="mysubscriptionid=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var="mytenantid=${{ secrets.AZURE_TENANT_ID }}"
+        run: terraform apply -auto-approve -var="environment=${{ github.event.inputs.environment }}" 
