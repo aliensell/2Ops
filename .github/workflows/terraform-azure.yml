@@ -40,7 +40,7 @@ jobs:
         run: terraform init
 
       - name: unlock
-        run: echo "yes" | terraform force-unlock "462dde2f-4d4e-ffe6-5313-c7b35bd3350d"
+        run: terraform force-unlock -force "462dde2f-4d4e-ffe6-5313-c7b35bd3350d"
       
       - name: Terraform Plan
         run: terraform plan -var="environment=${{ github.event.inputs.environment }}"
