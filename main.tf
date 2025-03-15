@@ -94,12 +94,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
     node_count         = 2
     vm_size            = "Standard_DS2_v2"
     vnet_subnet_id     = azurerm_subnet.subnet_aks[0].id
-    enable_private_cluster = true
-  }
-  private_cluster {
-    enabled = true
   }
 
+  private_cluster_enabled = true
+  
   identity {
     type = "SystemAssigned"
   }
