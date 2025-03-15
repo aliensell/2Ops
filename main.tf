@@ -81,13 +81,13 @@ resource "azurerm_key_vault" "qa_keyvault" {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = data.azurerm_client_config.current.object_id
     key_permissions = [
-      "Get",
+      "Get", "List", "Encrypt", "Decrypt"
     ]
     secret_permissions = [
-      "Get",
+      "Get", "List", "Encrypt", "Decrypt"
     ]
     storage_permissions = [
-      "Get",
+      "Get", "List", "Encrypt", "Decrypt"
     ]
   }
 }
