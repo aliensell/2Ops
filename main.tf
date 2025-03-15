@@ -73,13 +73,13 @@ resource "azurerm_subnet" "subnet_aks" {
   virtual_network_name = azurerm_virtual_network.dev_vnet[0].name
   address_prefixes     = ["10.0.2.0/24"]
   #service_endpoints    = ["Microsoft.Network"]
-  delegation {
-    name = "aks-subnet-delegation"
-    service_delegation {
-      name    = "Microsoft.ContainerService/managedClusters"
-      actions = ["Microsoft.Network/virtualNetworks/subnets/join/action"]
-    }
-  }
+  #delegation {
+  #  name = "aks-subnet-delegation"
+  #  service_delegation {
+  #    name    = "Microsoft.ContainerService/managedClusters"
+  #    actions = ["Microsoft.Network/virtualNetworks/subnets/join/action"]
+  #  }
+  #}
 }
 
 resource "azurerm_kubernetes_cluster" "aks" {
