@@ -39,8 +39,8 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      #- name: unlock
-      #  run: terraform force-unlock -force "01b21cc4-e4af-acea-1ce1-bc1969669076"
+      - name: unlock
+        run: terraform force-unlock -force "fc798909-97da-bc54-128a-69a4e2f311c9"
       
       - name: Terraform Plan
         env:
@@ -52,5 +52,5 @@ jobs:
         if: ${{ github.event.inputs.environment == 'DEV' || github.event.inputs.environment == 'QA' }}
         env:
           TF_VAR_mysubscriptionid: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          TF_VER_mytenantid: ${{ secrets.AZURE_TENANT_ID }}
+          TF_VAR_mytenantid: ${{ secrets.AZURE_TENANT_ID }}
         run: terraform apply -auto-approve -var="environment=${{ github.event.inputs.environment }}" 
