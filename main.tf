@@ -74,4 +74,20 @@ resource "azurerm_key_vault" "qa_keyvault" {
   #tenant_id          = "bbaf146a-d527-4a60-931a-85358eb8160d"
   tenant_id           = data.azurerm_client_config.current.tenant_id
   sku_name            = "standard"
+  soft_delete_retention_days  = 7
+  purge_protection_enabled    = false
+
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = data.azurerm_client_config.current.object_id
+    key_permissions = [
+      "Get",
+    ]
+    secret_permissions = [
+      "Get",
+    ]
+    storage_permissions = [
+      "Get",
+    ]
+  }
 }
