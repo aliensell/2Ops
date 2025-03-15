@@ -82,6 +82,33 @@ resource "azurerm_subnet" "subnet_aks" {
   }
 }
 
+resource "azurerm_kubernetes_cluster" "aks" {
+  count                    = var.environment == "DEV" ? 1 : 0
+  name                     = "aks-cluster-dev"
+  resource_group_name      = azurerm_resource_group.dev_rg[0].name
+  location                 = azurerm_resource_group.dev_rg[0].location
+  dns_prefix               = "aksdev"
+
+  default_node_pool {
+    name               = "default"
+    node_count         = 2
+    vm_size            = "Standard_DS2_v2"
+    vnet_subnet_id     = azurerm_subnet.aks_subnet.id
+    enable_private_cluster = true
+  }
+  private_cluster {
+    enabled = true
+  }
+
+  identity {
+    type = "SystemAssigned"
+  }
+
+  tags = {
+    environment = "dev"
+  }
+}
+
 resource "azurerm_storage_account" "dev_storage" {
   count                    = var.environment == "DEV" ? 1 : 0
   name                     = "mystoragedev"
@@ -91,7 +118,6 @@ resource "azurerm_storage_account" "dev_storage" {
   account_replication_type = "LRS"
   network_rules {
     default_action             = "Deny"
-    #ip_rules                   = ["100.0.0.1"]
     virtual_network_subnet_ids = [azurerm_subnet.subnet[0].id]
   }
 }
