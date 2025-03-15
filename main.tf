@@ -16,15 +16,25 @@ terraform {
 
 data "azurerm_client_config" "current" {}
 
+variable "environment" {
+  description = "The environment to deploy (DEV/QA)"
+  type        = string
+}
+
+variable "mytenantid" {
+  description = "tenant_id which taken from GitHub secrets"
+  type        = string
+}
+
+variable "mysubscriptionid" {
+  description = "subscription_id which taken from GitHub secrets"
+  type        = string
+}
+
 provider "azurerm" {
   #subscription_id = data.azurerm_client_config.current.subscription_id
   subscription_id = "932a9678-b893-4bb7-8826-83e88ae22272"
   features {}
-}
-
-variable "environment" {
-  description = "The environment to deploy (DEV/QA)"
-  type        = string
 }
 
 resource "azurerm_resource_group" "dev_rg" {
