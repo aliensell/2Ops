@@ -39,10 +39,13 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      - name: unlock
-        run: terraform force-unlock -force "462dde2f-4d4e-ffe6-5313-c7b35bd3350d"
+      #- name: unlock
+      #  run: terraform force-unlock -force "462dde2f-4d4e-ffe6-5313-c7b35bd3350d"
       
       - name: Terraform Plan
+        env:
+          TF_VAR_mysubscriptionid: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          TF_VER_mytenantid: ${{ secrets.AZURE_TENANT_ID }}
         run: terraform plan -var="environment=${{ github.event.inputs.environment }}"
 
       - name: Terraform Apply
