@@ -33,7 +33,8 @@ variable "mysubscriptionid" {
 
 provider "azurerm" {
   #subscription_id = data.azurerm_client_config.current.subscription_id
-  subscription_id = "932a9678-b893-4bb7-8826-83e88ae22272"
+  #subscription_id = "932a9678-b893-4bb7-8826-83e88ae22272"
+  subscription_id = "${var.mysubscriptionid}"
   features {}
 }
 
