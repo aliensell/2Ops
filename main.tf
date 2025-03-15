@@ -92,6 +92,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     network_plugin = "azure"
     network_policy = "azure"
     service_cidr = "10.0.4.0/24"
+    dns_service_ip = "10.0.4.10"
   }
   
   private_cluster_enabled = true
